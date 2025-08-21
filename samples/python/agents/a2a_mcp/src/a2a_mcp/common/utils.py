@@ -12,11 +12,17 @@ logger = logging.getLogger(__name__)
 
 def init_api_key():
     """Initialize the API key for Google Generative AI."""
-    if not os.getenv('GOOGLE_API_KEY'):
-        logger.error('GOOGLE_API_KEY is not set')
-        raise ValueError('GOOGLE_API_KEY is not set')
-
-    genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+    google_api_key = os.getenv('GOOGLE_API_KEY')
+    openai_api_key = os.getenv('OPENAI_API_KEY')
+    
+    if google_api_key:
+        genai.configure(api_key=google_api_key)
+        logger.info('Using Google API key')
+    elif openai_api_key:
+        logger.info('Using OpenAI API key (Google API key not set)')
+    else:
+        logger.error('Neither GOOGLE_API_KEY nor OPENAI_API_KEY is set')
+        raise ValueError('Neither GOOGLE_API_KEY nor OPENAI_API_KEY is set')
 
 
 def config_logging():
